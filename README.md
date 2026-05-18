@@ -30,10 +30,11 @@ Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, me
 - Sprint 1: Backend API nền tảng cho auth, projects, milestone, tasks.
 - Sprint 2: Smart Import upload file, Google Sheets, GPT-4o parsing, review trước khi confirm.
 - Sprint 3: Frontend auth, project flow, React Router, Smart Import chọn project thật.
+- Sprint 4: Countdown UI hiển thị đồng hồ đếm ngược trên Project Card.
 
-## Sprint Tiếp Theo
+## Sprint Đang Thực Hiện
 
-- Sprint 4: Countdown UI
+- Sprint 5: Email reminders, Share Link read-only, Settings, mobile responsive, Chrome Extension v0.1.
 
 ## Local Setup
 
