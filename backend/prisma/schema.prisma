@@ -25,6 +25,7 @@ model User {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   projects         Project[]
+  reminderLogs     ReminderLog[]
   pinnedDeadline   PinnedDeadline?
   paymentRequests  PaymentRequest[]
 
@@ -111,6 +112,20 @@ enum TaskStatus {
   ACTIVE
   COMPLETED
   OVERDUE
+}
+
+model ReminderLog {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entityType  EntityType
+  entityId    String
+  reminderKey String
+  sentAt      DateTime     @default(now())
+
+  @@unique([userId, entityType, entityId, reminderKey])
+  @@index([userId, sentAt])
+  @@map("reminder_logs")
 }
 
 model ShareLink {

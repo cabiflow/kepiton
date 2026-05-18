@@ -121,7 +121,7 @@ export function Import() {
   }
 
   return (
-    <section className="px-6 py-10">
+    <section className="px-4 py-6 sm:px-6 sm:py-10">
       <section className="mx-auto grid max-w-5xl gap-6">
         <header>
           <h1 className="text-3xl font-bold">{vi.import.title}</h1>
@@ -174,9 +174,9 @@ export function Import() {
         {success && <p className="rounded-md bg-safe px-4 py-3 text-sm text-white">{success}</p>}
 
         <Card>
-          <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold">{vi.import.reviewing}</h2>
-            <Button disabled={!importId || isConfirming} onClick={confirmImport}>
+            <Button className="w-full sm:w-auto" disabled={!importId || isConfirming} onClick={confirmImport}>
               {isConfirming ? vi.import.confirming : vi.import.confirm}
             </Button>
           </div>

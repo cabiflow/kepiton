@@ -4,6 +4,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { apiRouter } from './routes/index.js';
 import { logger } from './lib/logger.js';
+import { startReminderJob } from './services/reminderJob.js';
 import { handleRouteError } from './utils/http.js';
 
 const app = express();
@@ -27,4 +28,5 @@ app.use(
 
 app.listen(port, () => {
   logger.info(`Kepiton API is running on port ${port}`);
+  startReminderJob();
 });

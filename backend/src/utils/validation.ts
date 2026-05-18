@@ -55,6 +55,25 @@ export const importConfirmSchema = z.object({
   importId: z.string().uuid(),
 });
 
+export const shareCreateSchema = z.object({
+  expiresAt: z.string().datetime().nullable().optional(),
+});
+
+export const settingsUpdateSchema = z.object({
+  timezone: z.string().trim().min(1).optional(),
+  remindAt7Days: z.boolean().optional(),
+  remindAt3Days: z.boolean().optional(),
+  remindAt1Day: z.boolean().optional(),
+  remindAtDeadline: z.boolean().optional(),
+  dailyDigest: z.boolean().optional(),
+  darkMode: z.boolean().optional(),
+});
+
+export const pinnedDeadlineSchema = z.object({
+  entityType: z.enum(['PROJECT', 'TASK']),
+  entityId: z.string().uuid(),
+});
+
 export function toDate(value: string) {
   return new Date(value);
 }

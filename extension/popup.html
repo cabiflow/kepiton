@@ -8,8 +8,35 @@
   </head>
   <body>
     <main class="popup">
-      <h1 data-i18n="title"></h1>
-      <p data-i18n="emptyState"></p>
+      <header class="popup__header">
+        <h1 data-i18n="title"></h1>
+        <span class="popup__badge">v0.1</span>
+      </header>
+      <section id="state" class="state"></section>
+      <section id="deadline" class="deadline" hidden>
+        <p class="deadline__label" data-i18n="pinnedDeadline"></p>
+        <h2 id="deadline-name"></h2>
+        <div class="countdown" aria-live="polite">
+          <div>
+            <strong id="days">0</strong>
+            <span data-i18n="days"></span>
+          </div>
+          <div>
+            <strong id="hours">0</strong>
+            <span data-i18n="hours"></span>
+          </div>
+          <div>
+            <strong id="minutes">0</strong>
+            <span data-i18n="minutes"></span>
+          </div>
+          <div>
+            <strong id="seconds">0</strong>
+            <span data-i18n="seconds"></span>
+          </div>
+        </div>
+        <p id="deadline-date" class="deadline__date"></p>
+      </section>
+      <button id="open-app" class="button" type="button" data-i18n="openApp"></button>
     </main>
     <script src="popup.js"></script>
   </body>

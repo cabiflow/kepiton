@@ -8,11 +8,11 @@ export function Navbar() {
 
   return (
     <header className="border-b border-border bg-bg">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <nav className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <Link className="text-lg font-bold text-blue" to="/">
           Kepiton
         </Link>
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex flex-wrap items-center gap-3 text-sm sm:gap-4">
           {user && (
             <>
               <NavLink className="text-text-muted hover:text-text" to="/">
