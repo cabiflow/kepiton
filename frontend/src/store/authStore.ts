@@ -22,6 +22,31 @@ export interface AuthState {
   setError: (error: string | null) => void;
 }
 
+interface ChromeStorageLocal {
+  set: (items: Record<string, string>) => Promise<void>;
+  remove: (key: string) => Promise<void>;
+}
+
+interface ChromeApi {
+  storage?: {
+    local?: ChromeStorageLocal;
+  };
+}
+
+declare const chrome: ChromeApi | undefined;
+
+async function saveExtensionToken(token: string) {
+  if (typeof chrome !== 'undefined' && chrome?.storage?.local) {
+    await chrome.storage.local.set({ kepiton_token: token });
+  }
+}
+
+async function removeExtensionToken() {
+  if (typeof chrome !== 'undefined' && chrome?.storage?.local) {
+    await chrome.storage.local.remove('kepiton_token');
+  }
+}
+
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isLoading: false,
@@ -35,6 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
 
       const response = await api.get<{ user: AuthUser }>('/auth/me');
+      await saveExtensionToken(data.session.access_token);
       set({ user: response.data.user });
     } catch {
       set({ error: vi.auth.loginError });
@@ -65,6 +91,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await api.post('/auth/logout');
       await supabase.auth.signOut();
+      await removeExtensionToken();
       set({ user: null });
     } catch {
       set({ error: vi.auth.logoutError });
@@ -77,11 +104,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
+        await removeExtensionToken();
         set({ user: null });
         return;
       }
 
       const response = await api.get<{ user: AuthUser }>('/auth/me');
+      await saveExtensionToken(data.session.access_token);
       set({ user: response.data.user });
     } catch {
       set({ user: null });
