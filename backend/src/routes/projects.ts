@@ -4,11 +4,12 @@ import { Router } from 'express';
 import { prisma } from '../lib/prisma.js';
 import { requireAuth } from '../middleware/auth.js';
 import { enforceFreeProjectLimit } from '../middleware/freeTierGate.js';
-import { asyncHandler, notImplemented, sendError } from '../utils/http.js';
+import { asyncHandler, sendError } from '../utils/http.js';
 import {
   milestoneSchema,
   projectCreateSchema,
   projectUpdateSchema,
+  shareCreateSchema,
   taskCreateSchema,
   toDate,
 } from '../utils/validation.js';
@@ -448,4 +449,46 @@ projectsRouter.post(
   }),
 );
 
-projectsRouter.post('/:id/share', requireAuth, notImplemented);
+projectsRouter.post(
+  '/:id/share',
+  requireAuth,
+  asyncHandler(async (request, response) => {
+    if (!request.user) {
+      sendError(response, 401, 'Vui lòng đăng nhập để tiếp tục.', 'UNAUTHORIZED');
+      return;
+    }
+
+    const body = shareCreateSchema.parse(request.body);
+    const projectId = getProjectId(request);
+    if (!projectId) {
+      sendError(response, 400, 'Mã dự án không hợp lệ.', 'INVALID_PROJECT_ID');
+      return;
+    }
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        userId: request.user.id,
+        status: { not: ProjectStatus.DELETED },
+      },
+      select: { id: true },
+    });
+
+    if (!project) {
+      sendError(response, 404, 'Không tìm thấy dự án.', 'PROJECT_NOT_FOUND');
+      return;
+    }
+
+    const defaultExpiry = new Date();
+    defaultExpiry.setDate(defaultExpiry.getDate() + 30);
+
+    const shareLink = await prisma.shareLink.create({
+      data: {
+        projectId: project.id,
+        expiresAt: body.expiresAt ? toDate(body.expiresAt) : defaultExpiry,
+      },
+    });
+
+    response.status(201).json({ shareLink });
+  }),
+);

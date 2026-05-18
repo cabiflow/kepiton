@@ -7,7 +7,28 @@ export interface AuthUser {
   id: string;
   email: string;
   tier: 'FREE' | 'PRO';
+  timezone: string;
+  uploadCount: number;
+  remindAt7Days: boolean;
+  remindAt3Days: boolean;
+  remindAt1Day: boolean;
+  remindAtDeadline: boolean;
+  dailyDigest: boolean;
+  darkMode: boolean;
 }
+
+export type AuthSettingsInput = Partial<
+  Pick<
+    AuthUser,
+    | 'timezone'
+    | 'remindAt7Days'
+    | 'remindAt3Days'
+    | 'remindAt1Day'
+    | 'remindAtDeadline'
+    | 'dailyDigest'
+    | 'darkMode'
+  >
+>;
 
 export interface AuthState {
   user: AuthUser | null;
@@ -17,6 +38,7 @@ export interface AuthState {
   register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   loadMe: () => Promise<void>;
+  updateSettings: (input: AuthSettingsInput) => Promise<boolean>;
   setUser: (user: AuthUser | null) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
@@ -114,6 +136,19 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: response.data.user });
     } catch {
       set({ user: null });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  updateSettings: async (input) => {
+    set({ error: null, isLoading: true });
+    try {
+      const response = await api.put<{ user: AuthUser }>('/auth/me/settings', input);
+      set({ user: response.data.user });
+      return true;
+    } catch {
+      set({ error: vi.settings.saveError });
+      return false;
     } finally {
       set({ isLoading: false });
     }

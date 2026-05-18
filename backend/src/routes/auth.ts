@@ -1,9 +1,14 @@
 import { Router } from 'express';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { isSupabaseConfigured, supabaseAdmin } from '../lib/supabase.js';
 import { requireAuth } from '../middleware/auth.js';
 import { asyncHandler, sendError } from '../utils/http.js';
-import { authEmailPasswordSchema, forgotPasswordSchema } from '../utils/validation.js';
+import {
+  authEmailPasswordSchema,
+  forgotPasswordSchema,
+  settingsUpdateSchema,
+} from '../utils/validation.js';
 
 export const authRouter = Router();
 
@@ -167,6 +172,63 @@ authRouter.get(
       sendError(response, 401, 'Vui lòng đăng nhập để tiếp tục.', 'UNAUTHORIZED');
       return;
     }
+
+    response.json({ user });
+  }),
+);
+
+authRouter.put(
+  '/me/settings',
+  requireAuth,
+  asyncHandler(async (request, response) => {
+    if (!request.user) {
+      sendError(response, 401, 'Vui lòng đăng nhập để tiếp tục.', 'UNAUTHORIZED');
+      return;
+    }
+
+    const body = settingsUpdateSchema.parse(request.body);
+    const data: Prisma.UserUpdateInput = {};
+    if (body.timezone !== undefined) {
+      data.timezone = body.timezone;
+    }
+    if (body.remindAt7Days !== undefined) {
+      data.remindAt7Days = body.remindAt7Days;
+    }
+    if (body.remindAt3Days !== undefined) {
+      data.remindAt3Days = body.remindAt3Days;
+    }
+    if (body.remindAt1Day !== undefined) {
+      data.remindAt1Day = body.remindAt1Day;
+    }
+    if (body.remindAtDeadline !== undefined) {
+      data.remindAtDeadline = body.remindAtDeadline;
+    }
+    if (body.dailyDigest !== undefined) {
+      data.dailyDigest = body.dailyDigest;
+    }
+    if (body.darkMode !== undefined) {
+      data.darkMode = body.darkMode;
+    }
+
+    const user = await prisma.user.update({
+      where: { id: request.user.id },
+      data,
+      select: {
+        id: true,
+        email: true,
+        tier: true,
+        timezone: true,
+        isAdmin: true,
+        uploadCount: true,
+        remindAt7Days: true,
+        remindAt3Days: true,
+        remindAt1Day: true,
+        remindAtDeadline: true,
+        dailyDigest: true,
+        darkMode: true,
+        createdAt: true,
+      },
+    });
 
     response.json({ user });
   }),

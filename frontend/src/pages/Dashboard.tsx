@@ -34,20 +34,20 @@ export function Dashboard() {
   }
 
   return (
-    <section className="mx-auto grid max-w-6xl gap-6 px-6 py-10">
+    <section className="mx-auto grid max-w-6xl gap-6 px-4 py-6 sm:px-6 sm:py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-text">{vi.dashboard.title}</h1>
           <p className="mt-2 text-text-muted">{vi.dashboard.emptySubtitle}</p>
         </div>
-        <Link to="/import">
-          <Button>{vi.dashboard.openImport}</Button>
+        <Link className="w-full sm:w-auto" to="/import">
+          <Button className="w-full sm:w-auto">{vi.dashboard.openImport}</Button>
         </Link>
       </div>
 
       <Card>
         <h2 className="text-lg font-semibold">{vi.dashboard.newProject}</h2>
-        <form className="mt-4 grid gap-4 md:grid-cols-4" onSubmit={submit}>
+        <form className="mt-4 grid gap-4 lg:grid-cols-4" onSubmit={submit}>
           <label className="grid gap-2 text-sm font-medium">
             {vi.dashboard.projectName}
             <Input value={name} onChange={(event) => setName(event.target.value)} required />

@@ -1,12 +1,15 @@
 :root {
   --color-bg: #ffffff;
+  --color-bg-secondary: #f8fafc;
   --color-text: #1e293b;
   --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
   --color-blue: #2563eb;
+  --color-danger: #dc2626;
 }
 
 body {
-  width: 320px;
+  width: 360px;
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
@@ -17,14 +20,109 @@ body {
   padding: 16px;
 }
 
+.popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
 h1 {
-  margin: 0 0 8px;
+  margin: 0;
   color: var(--color-blue);
   font-size: 18px;
+}
+
+.popup__badge {
+  border-radius: 999px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  padding: 4px 8px;
 }
 
 p {
   margin: 0;
   color: var(--color-text-muted);
   font-size: 14px;
+}
+
+.state {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 12px;
+}
+
+.deadline {
+  display: grid;
+  gap: 12px;
+}
+
+.deadline[hidden] {
+  display: none;
+}
+
+.deadline__label {
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.countdown div {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  padding: 8px;
+  text-align: center;
+}
+
+.countdown strong {
+  display: block;
+  color: var(--color-blue);
+  font-size: 20px;
+}
+
+.countdown span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.deadline__date {
+  font-size: 13px;
+}
+
+.button {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-blue);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 14px;
+  padding: 10px 12px;
+}
+
+.overdue {
+  border-radius: 8px;
+  background: var(--color-danger);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 10px;
+  text-align: center;
 }
