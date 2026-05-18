@@ -74,6 +74,10 @@ export const pinnedDeadlineSchema = z.object({
   entityId: z.string().uuid(),
 });
 
+export const adminRejectPaymentSchema = z.object({
+  note: z.string().trim().min(1).max(500).optional(),
+});
+
 export function toDate(value: string) {
   return new Date(value);
 }

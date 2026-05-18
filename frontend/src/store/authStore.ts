@@ -7,6 +7,7 @@ export interface AuthUser {
   id: string;
   email: string;
   tier: 'FREE' | 'PRO';
+  isAdmin: boolean;
   timezone: string;
   uploadCount: number;
   remindAt7Days: boolean;
