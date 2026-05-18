@@ -49,10 +49,24 @@ model Project {
   milestone   Milestone?
   shareLinks  ShareLink[]
   tasks       Task[]
+  importUsages ImportUsage[]
 
   @@index([userId, status])
   @@index([deadline])
   @@map("projects")
+}
+
+model ImportUsage {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  monthKey  String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, monthKey])
+  @@map("import_usages")
 }
 
 enum ProjectStatus {

@@ -42,6 +42,19 @@ export const taskUpdateSchema = z.object({
   notes: z.string().trim().min(1).nullable().optional(),
 });
 
+export const importProjectSchema = z.object({
+  projectId: z.string().uuid(),
+});
+
+export const importSheetsSchema = z.object({
+  projectId: z.string().uuid(),
+  url: z.string().url(),
+});
+
+export const importConfirmSchema = z.object({
+  importId: z.string().uuid(),
+});
+
 export function toDate(value: string) {
   return new Date(value);
 }

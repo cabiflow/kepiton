@@ -12,6 +12,7 @@ export default [
         project: './tsconfig.json',
       },
       globals: {
+        fetch: 'readonly',
         process: 'readonly',
       },
     },

@@ -1,10 +1,21 @@
 import OpenAI from 'openai';
+import { z } from 'zod';
 
 export interface ParsedTask {
   ten_task: string;
   deadline: string | null;
   nguoi_phu_trach: string | null;
 }
+
+const parsedTaskSchema = z.object({
+  ten_task: z.string().trim().min(1),
+  deadline: z.string().nullable(),
+  nguoi_phu_trach: z.string().nullable(),
+});
+
+const parsedTasksSchema = z.object({
+  tasks: z.array(parsedTaskSchema),
+});
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -17,7 +28,7 @@ export async function parsePlanWithOpenAI(fileContent: string): Promise<ParsedTa
       {
         role: 'system',
         content:
-          'Bạn là trợ lý đọc file kế hoạch công việc. Chỉ trả về JSON array hợp lệ, không kèm giải thích.',
+          'Bạn là trợ lý đọc file kế hoạch công việc. Chỉ trả về JSON object hợp lệ theo schema.',
       },
       {
         role: 'user',
@@ -43,6 +54,37 @@ Nội dung file:
 ${fileContent}`,
       },
     ],
+    response_format: {
+      type: 'json_schema',
+      json_schema: {
+        name: 'kepiton_import_tasks',
+        strict: true,
+        schema: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            tasks: {
+              type: 'array',
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  ten_task: { type: 'string' },
+                  deadline: {
+                    anyOf: [{ type: 'string' }, { type: 'null' }],
+                  },
+                  nguoi_phu_trach: {
+                    anyOf: [{ type: 'string' }, { type: 'null' }],
+                  },
+                },
+                required: ['ten_task', 'deadline', 'nguoi_phu_trach'],
+              },
+            },
+          },
+          required: ['tasks'],
+        },
+      },
+    },
   });
 
   const content = response.choices[0]?.message.content;
@@ -51,37 +93,6 @@ ${fileContent}`,
     throw new Error('OPENAI_EMPTY_RESPONSE');
   }
 
-  const parsed = JSON.parse(content) as unknown;
-
-  if (Array.isArray(parsed)) {
-    return parsed.filter(isParsedTask);
-  }
-
-  if (isTaskObject(parsed)) {
-    return parsed.tasks.filter(isParsedTask);
-  }
-
-  return [];
-}
-
-function isTaskObject(value: unknown): value is { tasks: unknown[] } {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'tasks' in value &&
-    Array.isArray((value as { tasks: unknown }).tasks)
-  );
-}
-
-function isParsedTask(value: unknown): value is ParsedTask {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  const task = value as Record<string, unknown>;
-  return (
-    typeof task.ten_task === 'string' &&
-    (typeof task.deadline === 'string' || task.deadline === null) &&
-    (typeof task.nguoi_phu_trach === 'string' || task.nguoi_phu_trach === null)
-  );
+  const parsed = parsedTasksSchema.parse(JSON.parse(content));
+  return parsed.tasks;
 }

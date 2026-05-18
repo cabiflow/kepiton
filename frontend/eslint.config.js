@@ -16,7 +16,10 @@ export default [
       globals: {
         clearInterval: 'readonly',
         document: 'readonly',
+        File: 'readonly',
+        FormData: 'readonly',
         setInterval: 'readonly',
+        window: 'readonly',
       },
     },
     plugins: {
