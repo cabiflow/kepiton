@@ -1,15 +1,39 @@
 # Kepiton
 
-Kepiton is a deadline management web app for Vietnam, built with React, Node.js, Prisma, Supabase, and a Chrome Extension.
+Kepiton là web app quản lý deadline theo đồng hồ đếm ngược thời gian thực.
 
-## Sprint 0 Scope
+## Tech Stack
 
-- Monorepo workspace scaffold.
-- Frontend Vite + React + TypeScript + Tailwind base structure.
-- Backend Express + TypeScript base structure.
-- Prisma schema matching `ARCHITECTURE.md`.
-- Chrome Extension Manifest V3 scaffold.
-- OpenAI GPT-4o environment placeholder for Smart Import beta.
+- Frontend: React + TypeScript + Vite + Tailwind CSS
+- Backend: Node.js + Express + TypeScript
+- Database/Auth: Supabase
+- ORM: Prisma
+- Extension: Chrome Extension Manifest V3
+
+## Branch Structure
+
+- `main`: stable branch, dùng cho bản đã ổn định.
+- `develop`: active branch, dùng để tích hợp các sprint đang phát triển.
+
+Các sprint mới sẽ tạo branch riêng từ `develop`, ví dụ:
+
+```text
+codex/sprint-4-countdown-ui
+codex/sprint-5-email-reminders
+```
+
+Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, merge `develop` vào `main`.
+
+## Sprints Đã Hoàn Thành
+
+- Sprint 0: Setup cấu trúc repo, frontend, backend, extension, Prisma schema.
+- Sprint 1: Backend API nền tảng cho auth, projects, milestone, tasks.
+- Sprint 2: Smart Import upload file, Google Sheets, GPT-4o parsing, review trước khi confirm.
+- Sprint 3: Frontend auth, project flow, React Router, Smart Import chọn project thật.
+
+## Sprint Tiếp Theo
+
+- Sprint 4: Countdown UI
 
 ## Local Setup
 
