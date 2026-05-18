@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import { useProjects } from '../hooks/useProjects';
 import { api } from '../lib/api';
 import { vi } from '../i18n/vi';
 
@@ -21,6 +22,7 @@ interface ConfirmResponse {
 }
 
 export function Import() {
+  const { fetchProjects, projects } = useProjects();
   const [projectId, setProjectId] = useState('');
   const [sheetsUrl, setSheetsUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -30,6 +32,10 @@ export function Import() {
   const [isConfirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    void fetchProjects();
+  }, [fetchProjects]);
 
   async function parseFile() {
     if (!projectId) {
@@ -114,7 +120,7 @@ export function Import() {
   }
 
   return (
-    <div className="min-h-screen bg-bg px-6 py-10 text-text">
+    <section className="px-6 py-10">
       <section className="mx-auto grid max-w-5xl gap-6">
         <header>
           <h1 className="text-3xl font-bold">{vi.import.title}</h1>
@@ -123,8 +129,19 @@ export function Import() {
 
         <Card className="grid gap-4">
           <label className="grid gap-2 text-sm font-medium">
-            {vi.import.projectId}
-            <Input value={projectId} onChange={(event) => setProjectId(event.target.value)} />
+            {vi.import.projectSelect}
+            <select
+              className="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-text outline-none focus:border-blue"
+              value={projectId}
+              onChange={(event) => setProjectId(event.target.value)}
+            >
+              <option value="">{vi.import.projectSelect}</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
           </label>
 
           <div className="grid gap-3 md:grid-cols-[1fr_auto]">
@@ -191,6 +208,6 @@ export function Import() {
           )}
         </Card>
       </section>
-    </div>
+    </section>
   );
 }

@@ -18,6 +18,7 @@ export default [
         document: 'readonly',
         File: 'readonly',
         FormData: 'readonly',
+        HTMLFormElement: 'readonly',
         setInterval: 'readonly',
         window: 'readonly',
       },

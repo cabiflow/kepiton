@@ -1,19 +1,37 @@
-import { vi } from './i18n/vi';
+import { useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { PageWrapper } from './components/layout/PageWrapper';
+import { useAuth } from './hooks/useAuth';
+import { Dashboard } from './pages/Dashboard';
 import { Import } from './pages/Import';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Settings } from './pages/Settings';
+import { ShareView } from './pages/ShareView';
 
 export function App() {
-  if (window.location.pathname === '/import') {
-    return <Import />;
-  }
+  const { isLoading, loadMe, user } = useAuth();
+
+  useEffect(() => {
+    void loadMe();
+  }, [loadMe]);
 
   return (
-    <PageWrapper>
-      <section className="mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-6">
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue">Kepiton</p>
-        <h1 className="mt-3 text-4xl font-bold text-text">{vi.dashboard.title}</h1>
-        <p className="mt-4 max-w-xl text-text-muted">{vi.dashboard.emptySubtitle}</p>
-      </section>
-    </PageWrapper>
+    <BrowserRouter>
+      <PageWrapper>
+        <Routes>
+          <Route element={user ? <Dashboard /> : <Navigate replace to="/login" />} path="/" />
+          <Route element={<Login />} path="/login" />
+          <Route element={<Register />} path="/register" />
+          <Route element={user ? <Import /> : <Navigate replace to="/login" />} path="/import" />
+          <Route
+            element={user ? <Settings /> : <Navigate replace to="/login" />}
+            path="/settings"
+          />
+          <Route element={<ShareView />} path="/share/:uuid" />
+        </Routes>
+        {isLoading && <div className="fixed bottom-4 right-4 rounded-md bg-blue px-3 py-2 text-sm text-white" />}
+      </PageWrapper>
+    </BrowserRouter>
   );
 }
