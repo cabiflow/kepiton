@@ -23,7 +23,8 @@ interface ConfirmResponse {
 
 export function Import() {
   const { fetchProjects, projects } = useProjects();
-  const [projectId, setProjectId] = useState('');
+  const initialProjectId = new URLSearchParams(window.location.search).get('projectId') ?? '';
+  const [projectId, setProjectId] = useState(initialProjectId);
   const [sheetsUrl, setSheetsUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [importId, setImportId] = useState<string | null>(null);

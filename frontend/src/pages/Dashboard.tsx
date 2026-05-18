@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { ProjectList } from '../components/project/ProjectList';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -76,19 +77,7 @@ export function Dashboard() {
         {!isLoading && projects.length === 0 && (
           <p className="text-sm text-text-muted">{vi.dashboard.noProjects}</p>
         )}
-        {projects.map((project) => (
-          <Card className="flex items-center justify-between gap-4" key={project.id}>
-            <div>
-              <h2 className="font-semibold">{project.name}</h2>
-              <p className="text-sm text-text-muted">
-                {new Date(project.deadline).toLocaleString('vi-VN')}
-              </p>
-            </div>
-            <Link to="/import">
-              <Button variant="secondary">{vi.dashboard.importFile}</Button>
-            </Link>
-          </Card>
-        ))}
+        <ProjectList projects={projects} />
       </div>
     </section>
   );
