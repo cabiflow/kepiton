@@ -10,6 +10,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["storage", "alarms"],
+  "permissions": ["storage", "alarms", "identity"],
   "host_permissions": ["https://kepiton.onrender.com/*"]
 }

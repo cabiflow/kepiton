@@ -6,5 +6,6 @@ build/
 !.env.example
 coverage/
 *.log
+*.tsbuildinfo
 .DS_Store
 backend/prisma/migrations/

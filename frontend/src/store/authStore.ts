@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
-interface AuthUser {
+export interface AuthUser {
   id: string;
   email: string;
   tier: 'FREE' | 'PRO';
 }
 
-interface AuthState {
+export interface AuthState {
   user: AuthUser | null;
   isLoading: boolean;
   error: string | null;

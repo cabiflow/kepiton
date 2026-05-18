@@ -13,6 +13,11 @@ export default [
       parserOptions: {
         project: './tsconfig.json',
       },
+      globals: {
+        clearInterval: 'readonly',
+        document: 'readonly',
+        setInterval: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,

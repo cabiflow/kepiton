@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-interface ProjectSummary {
+export interface ProjectSummary {
   id: string;
   name: string;
   deadline: string;
   createdAt: string;
 }
 
-interface ProjectState {
+export interface ProjectState {
   projects: ProjectSummary[];
   isLoading: boolean;
   error: string | null;

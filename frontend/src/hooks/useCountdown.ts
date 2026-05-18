@@ -43,13 +43,14 @@ function buildCountdown({ deadline, createdAt }: UseCountdownInput): CountdownSt
 }
 
 export function useCountdown(input: UseCountdownInput) {
+  const { createdAt, deadline } = input;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [state, setState] = useState<CountdownState>(() => buildCountdown(input));
+  const [state, setState] = useState<CountdownState>(() => buildCountdown({ createdAt, deadline }));
 
   useEffect(() => {
-    setState(buildCountdown(input));
+    setState(buildCountdown({ createdAt, deadline }));
     intervalRef.current = setInterval(() => {
-      setState(buildCountdown(input));
+      setState(buildCountdown({ createdAt, deadline }));
     }, SECOND_MS);
 
     return () => {
@@ -57,7 +58,7 @@ export function useCountdown(input: UseCountdownInput) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [input.deadline, input.createdAt]);
+  }, [createdAt, deadline]);
 
   return state;
 }
