@@ -39,10 +39,11 @@ Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, me
 - Giai đoạn A: Project Detail, Task UX, task CRUD trên giao diện, mobile-friendly task actions.
 - Giai đoạn B: Landing page, Legal pages, GA4 tracking.
 - Giai đoạn C: Claude API thật cho Smart Import và cấu hình deploy beta.
+- Giai đoạn D: QA hardening, seed dữ liệu demo và hướng dẫn vận hành beta.
 
 ## Giai Đoạn Tiếp Theo
 
-- Giai đoạn D: QA hardening, seed dữ liệu demo và hướng dẫn vận hành beta.
+- Deploy beta lên Render/Supabase production, chạy seed demo, smoke test production, rồi merge `develop` vào `main` khi PO ký off.
 
 ## Local Setup
 
