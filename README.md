@@ -32,10 +32,11 @@ Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, me
 - Sprint 3: Frontend auth, project flow, React Router, Smart Import chọn project thật.
 - Sprint 4: Countdown UI hiển thị đồng hồ đếm ngược trên Project Card.
 - Sprint 5: Email reminders, Share Link read-only, Settings, mobile responsive, Chrome Extension v0.1.
+- Sprint 6: Payment, Upgrade Pro, Admin Panel xác nhận thanh toán thủ công.
 
 ## Sprint Tiếp Theo
 
-- Sprint 6: Chờ PO xác nhận phạm vi.
+- Sprint 7: Chờ PO xác nhận phạm vi.
 
 ## Local Setup
 
