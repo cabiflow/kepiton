@@ -8,7 +8,7 @@ Tài liệu này dùng cho Giai đoạn C: deploy beta lên Render.com với Sup
 - Environment: `Node`
 - Branch: `develop`
 - Root directory: `backend`
-- Build command: `npm install && npm run build && npx prisma generate`
+- Build command: `npm install && npm run build`
 - Start command: `npm start`
 
 Environment variables cần khai báo trên Render:
