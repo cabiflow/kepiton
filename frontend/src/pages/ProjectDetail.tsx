@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CountdownTimer } from '../components/countdown/CountdownTimer';
 import { TaskList } from '../components/task/TaskList';
 import type { TaskFilter } from '../components/task/TaskList';
@@ -72,6 +72,7 @@ function getCompletionPercent(tasks: TaskItem[]) {
 
 export function ProjectDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [project, setProject] = useState<ProjectDetailData | null>(null);
   const [filter, setFilter] = useState<TaskFilter>('ALL');
   const [isLoading, setIsLoading] = useState(true);
@@ -129,6 +130,22 @@ export function ProjectDetail() {
     () => getCompletionPercent(project?.tasks ?? []),
     [project?.tasks],
   );
+  const isTaskPastMilestone =
+    Boolean(project?.milestone && taskForm.milestoneId && taskForm.deadline) &&
+    new Date(taskForm.deadline).getTime() > new Date(project?.milestone?.deadline ?? '').getTime();
+
+  function updateTaskStatus(taskId: string, status: TaskItem['status']) {
+    setProject((currentProject) =>
+      currentProject
+        ? {
+            ...currentProject,
+            tasks: currentProject.tasks.map((task) =>
+              task.id === taskId ? { ...task, status } : task,
+            ),
+          }
+        : currentProject,
+    );
+  }
 
   function openCreateTaskModal() {
     setTaskForm({
@@ -279,48 +296,32 @@ export function ProjectDetail() {
 
   async function completeTask(taskId: string) {
     setError(null);
+    const previousProject = project;
+    updateTaskStatus(taskId, 'COMPLETED');
     try {
       if (isDemoMode) {
-        setProject((currentProject) =>
-          currentProject
-            ? {
-                ...currentProject,
-                tasks: currentProject.tasks.map((task) =>
-                  task.id === taskId ? { ...task, status: 'COMPLETED' } : task,
-                ),
-              }
-            : currentProject,
-        );
         return;
       }
 
       await api.patch(`/tasks/${taskId}/complete`);
-      await fetchProject();
     } catch {
+      setProject(previousProject);
       setError(vi.projectDetail.saveError);
     }
   }
 
   async function reopenTask(taskId: string) {
     setError(null);
+    const previousProject = project;
+    updateTaskStatus(taskId, 'ACTIVE');
     try {
       if (isDemoMode) {
-        setProject((currentProject) =>
-          currentProject
-            ? {
-                ...currentProject,
-                tasks: currentProject.tasks.map((task) =>
-                  task.id === taskId ? { ...task, status: 'ACTIVE' } : task,
-                ),
-              }
-            : currentProject,
-        );
         return;
       }
 
       await api.patch(`/tasks/${taskId}/reopen`);
-      await fetchProject();
     } catch {
+      setProject(previousProject);
       setError(vi.projectDetail.saveError);
     }
   }
@@ -344,6 +345,38 @@ export function ProjectDetail() {
       await fetchProject();
     } catch {
       setError(vi.projectDetail.deleteError);
+    }
+  }
+
+  async function archiveProject() {
+    if (!id || !window.confirm(vi.projectDetail.archiveConfirm)) {
+      return;
+    }
+
+    setError(null);
+    try {
+      if (!isDemoMode) {
+        await api.post(`/projects/${id}/archive`);
+      }
+      navigate('/');
+    } catch {
+      setError(vi.projectDetail.projectActionError);
+    }
+  }
+
+  async function deleteProject() {
+    if (!id || !window.confirm(vi.projectDetail.deleteConfirm)) {
+      return;
+    }
+
+    setError(null);
+    try {
+      if (!isDemoMode) {
+        await api.delete(`/projects/${id}`);
+      }
+      navigate('/');
+    } catch {
+      setError(vi.projectDetail.projectActionError);
     }
   }
 
@@ -388,6 +421,14 @@ export function ProjectDetail() {
             <span>
               {vi.projectDetail.completedPercent}: {completionPercent}%
             </span>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button onClick={() => void archiveProject()} variant="secondary">
+              {vi.projectDetail.archiveProject}
+            </Button>
+            <Button onClick={() => void deleteProject()} variant="secondary">
+              {vi.projectDetail.deleteProject}
+            </Button>
           </div>
         </div>
         <div className="overflow-x-auto pb-1">
@@ -522,6 +563,11 @@ export function ProjectDetail() {
                 <option value={project.milestone.id}>{project.milestone.name}</option>
               </select>
             </label>
+          )}
+          {isTaskPastMilestone && (
+            <p className="rounded-md bg-warning px-3 py-2 text-sm font-medium text-white">
+              {vi.projectDetail.milestoneDeadlineWarning}
+            </p>
           )}
           <label className="grid gap-2 text-sm font-medium">
             {vi.projectDetail.taskNotes}
