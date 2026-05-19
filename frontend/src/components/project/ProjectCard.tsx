@@ -62,6 +62,9 @@ export function ProjectCard({ createdAt, deadline, description, id, name }: Proj
           {vi.dashboard.projectDeadline}: {deadlineDate.toLocaleString('vi-VN')}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
+          <Link to={`/projects/${id}`}>
+            <Button>{vi.dashboard.openProject}</Button>
+          </Link>
           <Link to={`/import?projectId=${id}`}>
             <Button variant="secondary">{vi.dashboard.importFile}</Button>
           </Link>
