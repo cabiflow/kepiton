@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Modal } from '../components/ui/Modal';
+import { trackEvent } from '../hooks/useAnalytics';
 import { vi } from '../i18n/vi';
 import { api } from '../lib/api';
 import { getDemoProjectDetail } from '../lib/demoData';
@@ -229,6 +230,9 @@ export function ProjectDetail() {
             ],
           };
         });
+        if (!taskForm.id) {
+          trackEvent('task_created', { project_id: id });
+        }
         setTaskModalOpen(false);
         return;
       }
@@ -237,6 +241,7 @@ export function ProjectDetail() {
         await api.put(`/tasks/${taskForm.id}`, payload);
       } else {
         await api.post(`/projects/${id}/tasks`, payload);
+        trackEvent('task_created', { project_id: id });
       }
       setTaskModalOpen(false);
       await fetchProject();

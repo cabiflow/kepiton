@@ -3,6 +3,7 @@ import { api } from '../lib/api';
 import { isDemoMode, supabase } from '../lib/supabase';
 import { vi } from '../i18n/vi';
 import { demoUser } from '../lib/demoData';
+import { trackEvent } from '../lib/analytics';
 
 export interface AuthUser {
   id: string;
@@ -80,6 +81,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       if (isDemoMode) {
         set({ user: demoUser });
+        trackEvent('login', { method: 'email' });
         return;
       }
 
@@ -91,6 +93,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const response = await api.get<{ user: AuthUser }>('/auth/me');
       await saveExtensionToken(data.session.access_token);
       set({ user: response.data.user });
+      trackEvent('login', { method: 'email' });
     } catch {
       set({ error: vi.auth.loginError });
     } finally {
@@ -102,6 +105,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       if (isDemoMode) {
         set({ user: demoUser });
+        trackEvent('sign_up', { method: 'email' });
         return;
       }
 
@@ -112,8 +116,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       if (data.session) {
         const response = await api.get<{ user: AuthUser }>('/auth/me');
+        await saveExtensionToken(data.session.access_token);
         set({ user: response.data.user });
       }
+      trackEvent('sign_up', { method: 'email' });
     } catch {
       set({ error: vi.auth.registerError });
     } finally {

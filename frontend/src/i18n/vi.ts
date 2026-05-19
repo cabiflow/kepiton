@@ -18,6 +18,59 @@ export const vi = {
     goToRegister: 'Chưa có tài khoản? Đăng ký',
     goToLogin: 'Đã có tài khoản? Đăng nhập',
   },
+  landing: {
+    eyebrow: 'Quản lý deadline theo thời gian thực',
+    heroTitle: 'Kepiton giúp đội Việt Nam nhìn deadline bằng đồng hồ đếm ngược rõ ràng.',
+    heroSubtitle:
+      'Tạo dự án, import kế hoạch, theo dõi task và chia sẻ tiến độ chỉ đọc cho khách hàng hoặc đồng đội.',
+    primaryCta: 'Bắt đầu miễn phí',
+    secondaryCta: 'Đăng nhập',
+    freeNote: 'Gói miễn phí tạo tối đa 3 dự án. Gói Pro mở khóa không giới hạn dự án.',
+    demoProject: 'Chiến dịch SEO tháng 6',
+    demoDeadline: 'Deadline: 30/06/2026 18:00',
+    demoUrgency: 'Còn 34% thời gian, cần tập trung xử lý',
+    valueProps: [
+      {
+        title: 'Đếm ngược dễ hiểu',
+        description:
+          'Mỗi dự án hiển thị ngày, giờ, phút, giây còn lại để cả đội biết việc nào đang gấp.',
+      },
+      {
+        title: 'Import kế hoạch nhanh',
+        description:
+          'Tải file hoặc dán link Google Sheets để biến kế hoạch thành danh sách công việc cần kiểm tra.',
+      },
+      {
+        title: 'Chia sẻ không cần chỉnh sửa',
+        description:
+          'Gửi link chỉ đọc để khách hàng theo dõi tiến độ mà không làm thay đổi dữ liệu nội bộ.',
+      },
+    ],
+    workflowTitle: 'Cách Kepiton hoạt động',
+    workflow: [
+      {
+        title: 'Tạo dự án và deadline',
+        description: 'Nhập tên dự án, mô tả ngắn và thời điểm cần hoàn thành.',
+      },
+      {
+        title: 'Thêm task hoặc import tự động',
+        description: 'Tạo công việc thủ công hoặc để Smart Import đọc file kế hoạch giúp bạn.',
+      },
+      {
+        title: 'Theo dõi mức độ khẩn cấp',
+        description: 'Màu xanh, vàng, đỏ giúp bạn biết deadline còn xa hay đã sát hạn.',
+      },
+    ],
+    audienceTitle: 'Phù hợp với',
+    audiences: [
+      'Founder và team nhỏ cần nhìn deadline của nhiều dự án cùng lúc.',
+      'Marketing agency cần chia sẻ tiến độ với khách hàng.',
+      'Người quản lý vận hành muốn giảm tình trạng quên hạn và trễ việc.',
+    ],
+    finalTitle: 'Bắt đầu với dự án đầu tiên trong vài phút.',
+    finalSubtitle: 'Không cần cài đặt phức tạp. Tạo tài khoản và nhập deadline là dùng được ngay.',
+    footerBrand: 'Kepiton - Deadline rõ ràng hơn cho đội nhỏ.',
+  },
   dashboard: {
     title: 'Dự án của tôi',
     emptyTitle: 'Bắt đầu theo dõi dự án đầu tiên của bạn',
@@ -217,6 +270,82 @@ export const vi = {
   },
   extension: {
     nudgeTitle: 'Theo dõi deadline mọi lúc với Extension miễn phí',
+    nudgeSubtitle:
+      'Ghim deadline quan trọng để xem ngay trên trình duyệt mà không cần mở lại dashboard.',
     nudgeCta: 'Cài ngay',
+    nudgeDismiss: 'Để sau',
+  },
+  legal: {
+    backHome: 'Về trang chủ',
+    termsTitle: 'Điều khoản sử dụng',
+    termsIntro:
+      'Trang này mô tả các nguyên tắc cơ bản khi bạn sử dụng Kepiton. Nội dung pháp lý cuối cùng cần được PO rà soát trước khi phát hành chính thức.',
+    termsSections: [
+      {
+        id: 'account',
+        title: 'Tài khoản',
+        body: 'Bạn chịu trách nhiệm bảo mật email, mật khẩu và các tài khoản đăng nhập liên kết. Nếu phát hiện truy cập bất thường, vui lòng ngừng sử dụng và liên hệ đội Kepiton để được hỗ trợ.',
+      },
+      {
+        id: 'usage',
+        title: 'Cách sử dụng dịch vụ',
+        body: 'Kepiton được dùng để quản lý deadline, công việc, import kế hoạch và chia sẻ tiến độ ở chế độ chỉ đọc. Bạn không được dùng sản phẩm để lưu trữ nội dung vi phạm pháp luật hoặc gây hại cho người khác.',
+      },
+      {
+        id: 'free-pro',
+        title: 'Gói miễn phí và Pro',
+        body: 'Gói miễn phí giới hạn tổng số dự án từng tạo. Gói Pro được kích hoạt sau khi đội Kepiton xác nhận thanh toán thủ công. Mức phí hiện tại là 299.000đ mỗi tháng.',
+      },
+      {
+        id: 'data',
+        title: 'Dữ liệu người dùng',
+        body: 'Bạn giữ quyền với dữ liệu dự án và công việc do mình tạo. Kepiton lưu dữ liệu để vận hành sản phẩm, gửi nhắc deadline và cải thiện trải nghiệm sử dụng.',
+      },
+      {
+        id: 'availability',
+        title: 'Tính sẵn sàng của dịch vụ',
+        body: 'Kepiton cố gắng duy trì dịch vụ ổn định nhưng có thể gián đoạn do bảo trì, lỗi hạ tầng hoặc dịch vụ bên thứ ba. Với bản beta, một số tính năng có thể thay đổi trong quá trình thử nghiệm.',
+      },
+      {
+        id: 'contact',
+        title: 'Liên hệ',
+        body: 'Thông tin đơn vị vận hành và email hỗ trợ sẽ được PO bổ sung trước khi phát hành chính thức.',
+      },
+    ],
+    privacyTitle: 'Chính sách bảo mật',
+    privacyIntro:
+      'Trang này giải thích Kepiton thu thập và sử dụng dữ liệu như thế nào. Nội dung cần được PO rà soát trước khi công bố chính thức.',
+    privacySections: [
+      {
+        id: 'collected-data',
+        title: 'Dữ liệu được thu thập',
+        body: 'Kepiton có thể lưu email, thông tin đăng nhập qua Supabase Auth, dự án, deadline, task, milestone, cấu hình nhắc email và trạng thái thanh toán.',
+      },
+      {
+        id: 'usage-purpose',
+        title: 'Mục đích sử dụng',
+        body: 'Dữ liệu được dùng để hiển thị dashboard, gửi email nhắc deadline, xử lý Smart Import, quản lý gói Pro và hỗ trợ người dùng khi có lỗi.',
+      },
+      {
+        id: 'third-parties',
+        title: 'Dịch vụ bên thứ ba',
+        body: 'Kepiton sử dụng Supabase, Render, Resend, Google Analytics và OpenAI cho bản demo Smart Import. Các dịch vụ này có chính sách bảo mật riêng.',
+      },
+      {
+        id: 'analytics',
+        title: 'Dữ liệu đo lường',
+        body: 'Kepiton dùng Google Analytics để biết người dùng xem trang nào và thực hiện thao tác nào. Dữ liệu này phục vụ cải thiện sản phẩm, không dùng để bán thông tin cá nhân.',
+      },
+      {
+        id: 'retention',
+        title: 'Lưu trữ và xóa dữ liệu',
+        body: 'Dữ liệu được lưu trong thời gian tài khoản còn hoạt động hoặc khi cần phục vụ vận hành. Yêu cầu xóa dữ liệu sẽ được xử lý theo quy trình hỗ trợ của Kepiton.',
+      },
+      {
+        id: 'privacy-contact',
+        title: 'Liên hệ về bảo mật',
+        body: 'Email và thông tin pháp lý chính thức sẽ được PO bổ sung trước khi phát hành chính thức.',
+      },
+    ],
   },
 } as const;

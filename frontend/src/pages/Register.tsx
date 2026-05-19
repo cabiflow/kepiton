@@ -14,13 +14,13 @@ export function Register() {
   const [password, setPassword] = useState('');
 
   if (user) {
-    navigate('/');
+    navigate('/dashboard');
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await register(email, password);
-    navigate('/');
+    navigate('/dashboard');
   }
 
   return (

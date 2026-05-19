@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { vi } from '../../i18n/vi';
 import { api } from '../../lib/api';
+import { trackEvent } from '../../hooks/useAnalytics';
 
 interface ProjectCardProps {
   id: string;
@@ -29,6 +30,7 @@ export function ProjectCard({ createdAt, deadline, description, id, name }: Proj
       const nextShareUrl = `${window.location.origin}/share/${response.data.shareLink.id}`;
       setShareUrl(nextShareUrl);
       setStatusMessage(vi.dashboard.shareReady);
+      trackEvent('share_link_created', { project_id: id });
     } catch {
       setStatusMessage(vi.dashboard.shareError);
     } finally {

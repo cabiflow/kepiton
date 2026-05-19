@@ -5,18 +5,35 @@ import { ProjectList } from '../components/project/ProjectList';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import { useAuth } from '../hooks/useAuth';
 import { useProjects } from '../hooks/useProjects';
+import { trackEvent } from '../hooks/useAnalytics';
 import { vi } from '../i18n/vi';
 
+const extensionNudgeStorageKey = 'kepiton_extension_nudge_dismissed';
+
 export function Dashboard() {
+  const { user } = useAuth();
   const { createProject, error, fetchProjects, isLoading, projects } = useProjects();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
+  const [showExtensionNudge, setShowExtensionNudge] = useState(false);
+  const chromeWebStoreUrl = import.meta.env.VITE_CHROME_EXTENSION_URL as string | undefined;
 
   useEffect(() => {
     void fetchProjects();
   }, [fetchProjects]);
+
+  useEffect(() => {
+    const dismissed = window.localStorage.getItem(extensionNudgeStorageKey);
+    const shouldShow = projects.length > 0 && dismissed !== 'true';
+    setShowExtensionNudge(shouldShow);
+
+    if (shouldShow) {
+      trackEvent('extension_nudge_shown', { project_count: projects.length });
+    }
+  }, [projects.length]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,10 +44,16 @@ export function Dashboard() {
     });
 
     if (project) {
+      trackEvent('project_created', { tier: user?.tier === 'PRO' ? 'pro' : 'free' });
       setName('');
       setDescription('');
       setDeadline('');
     }
+  }
+
+  function dismissExtensionNudge() {
+    window.localStorage.setItem(extensionNudgeStorageKey, 'true');
+    setShowExtensionNudge(false);
   }
 
   return (
@@ -71,6 +94,28 @@ export function Dashboard() {
         </form>
         {error && <p className="mt-3 text-sm text-danger">{error}</p>}
       </Card>
+
+      {showExtensionNudge && (
+        <Card className="flex flex-col gap-4 border-blue bg-bg-secondary sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-text">{vi.extension.nudgeTitle}</h2>
+            <p className="mt-1 text-sm text-text-muted">{vi.extension.nudgeSubtitle}</p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <a
+              className="rounded-md bg-blue px-4 py-2 text-center text-sm font-medium text-white transition hover:opacity-90"
+              href={chromeWebStoreUrl || '#'}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {vi.extension.nudgeCta}
+            </a>
+            <Button onClick={dismissExtensionNudge} variant="secondary">
+              {vi.extension.nudgeDismiss}
+            </Button>
+          </div>
+        </Card>
+      )}
 
       <div className="grid gap-3">
         {isLoading && <p className="text-sm text-text-muted">{vi.dashboard.loading}</p>}

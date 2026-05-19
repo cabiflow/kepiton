@@ -3,6 +3,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { useProjects } from '../hooks/useProjects';
+import { trackEvent } from '../hooks/useAnalytics';
 import { api } from '../lib/api';
 import { vi } from '../i18n/vi';
 
@@ -52,6 +53,7 @@ export function Import() {
     setError(null);
     setSuccess(null);
     setParsing(true);
+    trackEvent('import_started', { type: 'file' });
 
     try {
       const formData = new FormData();
@@ -84,6 +86,7 @@ export function Import() {
     setError(null);
     setSuccess(null);
     setParsing(true);
+    trackEvent('import_started', { type: 'sheets' });
 
     try {
       const response = await api.post<ParseResponse>('/import/sheets', {
@@ -111,6 +114,7 @@ export function Import() {
     try {
       const response = await api.post<ConfirmResponse>('/import/confirm', { importId });
       setSuccess(`${vi.import.success} ${response.data.importedCount}`);
+      trackEvent('import_completed', { task_count: response.data.importedCount });
       setImportId(null);
       setTasks([]);
     } catch {
