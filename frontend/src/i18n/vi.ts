@@ -329,7 +329,7 @@ export const vi = {
       {
         id: 'third-parties',
         title: 'Dịch vụ bên thứ ba',
-        body: 'Kepiton sử dụng Supabase, Render, Resend, Google Analytics và OpenAI cho bản demo Smart Import. Các dịch vụ này có chính sách bảo mật riêng.',
+        body: 'Kepiton sử dụng Supabase, Render, Resend, Google Analytics và Claude API (Anthropic) cho Smart Import. Các dịch vụ này có chính sách bảo mật riêng.',
       },
       {
         id: 'analytics',

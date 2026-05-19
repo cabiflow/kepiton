@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
 
 export interface ParsedTask {
@@ -13,23 +13,17 @@ const parsedTaskSchema = z.object({
   nguoi_phu_trach: z.string().nullable(),
 });
 
-const parsedTasksSchema = z.object({
-  tasks: z.array(parsedTaskSchema),
+const parsedTasksSchema = z.array(parsedTaskSchema);
+
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export async function parsePlanWithOpenAI(fileContent: string): Promise<ParsedTask[]> {
-  const response = await client.chat.completions.create({
-    model: process.env.OPENAI_IMPORT_MODEL ?? 'gpt-4o',
+export async function parseFileWithClaude(fileContent: string): Promise<ParsedTask[]> {
+  const message = await anthropic.messages.create({
+    model: 'claude-opus-4-5',
+    max_tokens: 4096,
     messages: [
-      {
-        role: 'system',
-        content:
-          'Bạn là trợ lý đọc file kế hoạch công việc. Chỉ trả về JSON object hợp lệ theo schema.',
-      },
       {
         role: 'user',
         content: `Bạn là trợ lý đọc file kế hoạch công việc.
@@ -54,45 +48,16 @@ Nội dung file:
 ${fileContent}`,
       },
     ],
-    response_format: {
-      type: 'json_schema',
-      json_schema: {
-        name: 'kepiton_import_tasks',
-        strict: true,
-        schema: {
-          type: 'object',
-          additionalProperties: false,
-          properties: {
-            tasks: {
-              type: 'array',
-              items: {
-                type: 'object',
-                additionalProperties: false,
-                properties: {
-                  ten_task: { type: 'string' },
-                  deadline: {
-                    anyOf: [{ type: 'string' }, { type: 'null' }],
-                  },
-                  nguoi_phu_trach: {
-                    anyOf: [{ type: 'string' }, { type: 'null' }],
-                  },
-                },
-                required: ['ten_task', 'deadline', 'nguoi_phu_trach'],
-              },
-            },
-          },
-          required: ['tasks'],
-        },
-      },
-    },
   });
 
-  const content = response.choices[0]?.message.content;
+  const responseText = message.content
+    .filter((block) => block.type === 'text')
+    .map((block) => block.text)
+    .join('');
 
-  if (!content) {
-    throw new Error('OPENAI_EMPTY_RESPONSE');
+  if (!responseText) {
+    throw new Error('CLAUDE_EMPTY_RESPONSE');
   }
 
-  const parsed = parsedTasksSchema.parse(JSON.parse(content));
-  return parsed.tasks;
+  return parsedTasksSchema.parse(JSON.parse(responseText));
 }

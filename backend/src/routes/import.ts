@@ -6,7 +6,7 @@ import multer from 'multer';
 import { prisma } from '../lib/prisma.js';
 import { requireAuth } from '../middleware/auth.js';
 import { enforceFreeImportLimit } from '../middleware/freeTierGate.js';
-import { parsePlanWithOpenAI } from '../services/claudeParser.js';
+import { parseFileWithClaude } from '../services/claudeParser.js';
 import { extractImportText } from '../services/fileImportService.js';
 import { saveImportDraft, takeImportDraft } from '../services/importDraftStore.js';
 import { asyncHandler, sendError } from '../utils/http.js';
@@ -74,7 +74,7 @@ importRouter.post(
       return;
     }
 
-    const tasks = await parsePlanWithOpenAI(fileContent);
+    const tasks = await parseFileWithClaude(fileContent);
     const importId = crypto.randomUUID();
     saveImportDraft({
       id: importId,
@@ -103,7 +103,7 @@ importRouter.post(
     }
 
     const sheetContent = await fetchGoogleSheetContent(body.url);
-    const tasks = await parsePlanWithOpenAI(sheetContent);
+    const tasks = await parseFileWithClaude(sheetContent);
     const importId = crypto.randomUUID();
     saveImportDraft({
       id: importId,
