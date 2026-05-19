@@ -6,6 +6,7 @@ import { Admin } from './pages/Admin';
 import { Dashboard } from './pages/Dashboard';
 import { Import } from './pages/Import';
 import { Login } from './pages/Login';
+import { ProjectDetail } from './pages/ProjectDetail';
 import { Register } from './pages/Register';
 import { Settings } from './pages/Settings';
 import { ShareView } from './pages/ShareView';
@@ -28,8 +29,12 @@ export function App() {
       <PageWrapper>
         <Routes>
           <Route element={user ? <Dashboard /> : <Navigate replace to="/login" />} path="/" />
-          <Route element={<Login />} path="/login" />
-          <Route element={<Register />} path="/register" />
+          <Route
+            element={user ? <ProjectDetail /> : <Navigate replace to="/login" />}
+            path="/projects/:id"
+          />
+          <Route element={user ? <Navigate replace to="/" /> : <Login />} path="/login" />
+          <Route element={user ? <Navigate replace to="/" /> : <Register />} path="/register" />
           <Route element={user ? <Import /> : <Navigate replace to="/login" />} path="/import" />
           <Route
             element={user ? <Upgrade /> : <Navigate replace to="/login" />}

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { api } from '../lib/api';
-import { supabase } from '../lib/supabase';
+import { isDemoMode, supabase } from '../lib/supabase';
 import { vi } from '../i18n/vi';
+import { demoUser } from '../lib/demoData';
 
 export interface AuthUser {
   id: string;
@@ -77,6 +78,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set({ user: demoUser });
+        return;
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error || !data.session) {
         throw new Error('LOGIN_FAILED');
@@ -94,6 +100,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (email, password) => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set({ user: demoUser });
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error || !data.user) {
         throw new Error('REGISTER_FAILED');
@@ -112,6 +123,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set({ user: demoUser });
+        return;
+      }
+
       await api.post('/auth/logout');
       await supabase.auth.signOut();
       await removeExtensionToken();
@@ -125,6 +141,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   loadMe: async () => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set({ user: demoUser });
+        return;
+      }
+
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
         await removeExtensionToken();
@@ -144,6 +165,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateSettings: async (input) => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set((state) => ({ user: state.user ? { ...state.user, ...input } : demoUser }));
+        return true;
+      }
+
       const response = await api.put<{ user: AuthUser }>('/auth/me/settings', input);
       set({ user: response.data.user });
       return true;
