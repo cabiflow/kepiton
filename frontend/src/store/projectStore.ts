@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { api } from '../lib/api';
 import { vi } from '../i18n/vi';
+import { getDemoProjectSummaries } from '../lib/demoData';
+import { isDemoMode } from '../lib/supabase';
 
 export interface ProjectSummary {
   id: string;
@@ -32,6 +34,11 @@ export const useProjectStore = create<ProjectState>((set) => ({
   fetchProjects: async () => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        set({ projects: getDemoProjectSummaries() });
+        return;
+      }
+
       const response = await api.get<{ projects: ProjectSummary[] }>('/projects');
       set({ projects: response.data.projects });
     } catch {
@@ -43,6 +50,18 @@ export const useProjectStore = create<ProjectState>((set) => ({
   createProject: async (input) => {
     set({ error: null, isLoading: true });
     try {
+      if (isDemoMode) {
+        const project: ProjectSummary = {
+          id: `demo-project-${Date.now()}`,
+          name: input.name,
+          description: input.description,
+          deadline: input.deadline,
+          createdAt: new Date().toISOString(),
+        };
+        set((state) => ({ projects: [...state.projects, project] }));
+        return project;
+      }
+
       const response = await api.post<{ project: ProjectSummary }>('/projects', input);
       set((state) => ({ projects: [...state.projects, response.data.project] }));
       return response.data.project;

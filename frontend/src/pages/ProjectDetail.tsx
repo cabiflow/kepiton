@@ -11,6 +11,8 @@ import { Input } from '../components/ui/Input';
 import { Modal } from '../components/ui/Modal';
 import { vi } from '../i18n/vi';
 import { api } from '../lib/api';
+import { getDemoProjectDetail } from '../lib/demoData';
+import { isDemoMode } from '../lib/supabase';
 
 interface Milestone {
   id: string;
@@ -91,6 +93,21 @@ export function ProjectDetail() {
     setError(null);
     setIsLoading(true);
     try {
+      if (isDemoMode) {
+        const demoProject = getDemoProjectDetail(id);
+        if (!demoProject) {
+          setProject(null);
+          setError(vi.projectDetail.notFound);
+          return;
+        }
+        setProject(demoProject);
+        if (demoProject.milestone) {
+          setMilestoneName(demoProject.milestone.name);
+          setMilestoneDeadline(toDateTimeLocal(demoProject.milestone.deadline));
+        }
+        return;
+      }
+
       const response = await api.get<ProjectResponse>(`/projects/${id}`);
       setProject(response.data.project);
       if (response.data.project.milestone) {
@@ -155,6 +172,50 @@ export function ProjectDetail() {
     };
 
     try {
+      if (isDemoMode) {
+        setProject((currentProject) => {
+          if (!currentProject) {
+            return currentProject;
+          }
+
+          if (taskForm.id) {
+            return {
+              ...currentProject,
+              tasks: currentProject.tasks.map((task) =>
+                task.id === taskForm.id
+                  ? {
+                      ...task,
+                      name: payload.name,
+                      deadline: payload.deadline,
+                      milestoneId: payload.milestoneId,
+                      assigneeName: payload.assigneeName,
+                      notes: payload.notes,
+                    }
+                  : task,
+              ),
+            };
+          }
+
+          return {
+            ...currentProject,
+            tasks: [
+              ...currentProject.tasks,
+              {
+                id: `demo-task-${Date.now()}`,
+                name: payload.name,
+                deadline: payload.deadline,
+                milestoneId: payload.milestoneId,
+                assigneeName: payload.assigneeName,
+                notes: payload.notes,
+                status: 'ACTIVE',
+              },
+            ],
+          };
+        });
+        setTaskModalOpen(false);
+        return;
+      }
+
       if (taskForm.id) {
         await api.put(`/tasks/${taskForm.id}`, payload);
       } else {
@@ -183,6 +244,25 @@ export function ProjectDetail() {
     };
 
     try {
+      if (isDemoMode) {
+        setProject((currentProject) => {
+          if (!currentProject) {
+            return currentProject;
+          }
+
+          return {
+            ...currentProject,
+            milestone: {
+              id: currentProject.milestone?.id ?? `demo-milestone-${Date.now()}`,
+              name: payload.name,
+              deadline: payload.deadline,
+            },
+          };
+        });
+        setShowMilestoneForm(false);
+        return;
+      }
+
       if (project?.milestone) {
         await api.put(`/projects/${id}/milestone`, payload);
       } else {
@@ -200,6 +280,20 @@ export function ProjectDetail() {
   async function completeTask(taskId: string) {
     setError(null);
     try {
+      if (isDemoMode) {
+        setProject((currentProject) =>
+          currentProject
+            ? {
+                ...currentProject,
+                tasks: currentProject.tasks.map((task) =>
+                  task.id === taskId ? { ...task, status: 'COMPLETED' } : task,
+                ),
+              }
+            : currentProject,
+        );
+        return;
+      }
+
       await api.patch(`/tasks/${taskId}/complete`);
       await fetchProject();
     } catch {
@@ -210,6 +304,20 @@ export function ProjectDetail() {
   async function reopenTask(taskId: string) {
     setError(null);
     try {
+      if (isDemoMode) {
+        setProject((currentProject) =>
+          currentProject
+            ? {
+                ...currentProject,
+                tasks: currentProject.tasks.map((task) =>
+                  task.id === taskId ? { ...task, status: 'ACTIVE' } : task,
+                ),
+              }
+            : currentProject,
+        );
+        return;
+      }
+
       await api.patch(`/tasks/${taskId}/reopen`);
       await fetchProject();
     } catch {
@@ -220,6 +328,18 @@ export function ProjectDetail() {
   async function deleteTask(taskId: string) {
     setError(null);
     try {
+      if (isDemoMode) {
+        setProject((currentProject) =>
+          currentProject
+            ? {
+                ...currentProject,
+                tasks: currentProject.tasks.filter((task) => task.id !== taskId),
+              }
+            : currentProject,
+        );
+        return;
+      }
+
       await api.delete(`/tasks/${taskId}`);
       await fetchProject();
     } catch {

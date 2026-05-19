@@ -33,8 +33,8 @@ export function App() {
             element={user ? <ProjectDetail /> : <Navigate replace to="/login" />}
             path="/projects/:id"
           />
-          <Route element={<Login />} path="/login" />
-          <Route element={<Register />} path="/register" />
+          <Route element={user ? <Navigate replace to="/" /> : <Login />} path="/login" />
+          <Route element={user ? <Navigate replace to="/" /> : <Register />} path="/register" />
           <Route element={user ? <Import /> : <Navigate replace to="/login" />} path="/import" />
           <Route
             element={user ? <Upgrade /> : <Navigate replace to="/login" />}
