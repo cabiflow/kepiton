@@ -22,6 +22,7 @@ codex/sprint-4-countdown-ui
 codex/sprint-5-email-reminders
 codex/phase-b-landing-legal-ga4
 codex/phase-c-claude-api-deploy
+codex/phase-d-qa-beta-release
 ```
 
 Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, merge `develop` vào `main`.
@@ -37,10 +38,11 @@ Khi sprint hoàn thành, tạo PR vào `develop`. Khi `develop` ổn định, me
 - Sprint 6: Payment, Upgrade Pro, Admin Panel xác nhận thanh toán thủ công.
 - Giai đoạn A: Project Detail, Task UX, task CRUD trên giao diện, mobile-friendly task actions.
 - Giai đoạn B: Landing page, Legal pages, GA4 tracking.
+- Giai đoạn C: Claude API thật cho Smart Import và cấu hình deploy beta.
 
 ## Giai Đoạn Tiếp Theo
 
-- Giai đoạn C: Claude API thật cho Smart Import và deploy beta lên Render.
+- Giai đoạn D: QA hardening, seed dữ liệu demo và hướng dẫn vận hành beta.
 
 ## Local Setup
 
