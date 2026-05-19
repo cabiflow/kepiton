@@ -15,7 +15,7 @@ export function Navbar() {
         <div className="flex flex-wrap items-center gap-3 text-sm sm:gap-4">
           {user && (
             <>
-              <NavLink className="text-text-muted hover:text-text" to="/">
+              <NavLink className="text-text-muted hover:text-text" to="/dashboard">
                 {vi.nav.dashboard}
               </NavLink>
               <NavLink className="text-text-muted hover:text-text" to="/import">

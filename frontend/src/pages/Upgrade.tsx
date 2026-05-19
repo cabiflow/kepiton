@@ -4,6 +4,7 @@ import { Card } from '../components/ui/Card';
 import { vi } from '../i18n/vi';
 import { api } from '../lib/api';
 import { useAuth } from '../hooks/useAuth';
+import { trackEvent } from '../hooks/useAnalytics';
 
 type PaymentStatus = 'PENDING' | 'CONFIRMED' | 'REJECTED';
 
@@ -73,6 +74,7 @@ export function Upgrade() {
       const response = await api.post<PaymentResponse>('/payment/request');
       setPaymentData(response.data);
       setSuccess(vi.payment.requestSuccess);
+      trackEvent('upgrade_requested', { tier: user?.tier === 'PRO' ? 'pro' : 'free' });
     } catch {
       setError(vi.payment.requestError);
     } finally {
