@@ -21,6 +21,14 @@ export function Navbar() {
               <NavLink className="text-text-muted hover:text-text" to="/import">
                 {vi.nav.import}
               </NavLink>
+              <NavLink className="text-text-muted hover:text-text" to="/upgrade">
+                {vi.nav.upgrade}
+              </NavLink>
+              {user.isAdmin && (
+                <NavLink className="text-text-muted hover:text-text" to="/admin">
+                  {vi.nav.admin}
+                </NavLink>
+              )}
               <NavLink className="text-text-muted hover:text-text" to="/settings">
                 {vi.nav.settings}
               </NavLink>
