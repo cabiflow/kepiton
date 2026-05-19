@@ -14,9 +14,9 @@ function getPaymentAmountVnd() {
 
 function getBankInfo() {
   return {
-    bankName: process.env.BANK_NAME ?? 'Vietcombank',
-    accountNumber: process.env.BANK_ACCOUNT_NUMBER ?? '1234567890',
-    accountName: process.env.BANK_ACCOUNT_NAME ?? 'KEPITON',
+    bankName: process.env.BANK_NAME ?? 'Ngân hàng TMCP Sài Gòn Hà Nội (SHB)',
+    accountNumber: process.env.BANK_ACCOUNT_NUMBER ?? '0356476269',
+    accountName: process.env.BANK_ACCOUNT_NAME ?? 'NGUYEN ANH DUC',
   };
 }
 
